@@ -183,6 +183,19 @@
       font-size: 0.9rem;
       user-select: none;
     }
+    details.review-fold {
+      margin-top: 0;
+      border-top: 0;
+      padding-top: 0;
+    }
+    details.review-fold > summary {
+      color: inherit;
+      font-size: inherit;
+    }
+    details.review-fold > summary .block-head {
+      display: inline-flex;
+      margin-bottom: 0;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -351,9 +364,11 @@
         }).join("");
         review =
           '<section class="block">' +
-            '<div class="block-head"><h2>今日修正與檢討</h2></div>' +
-            "<p>依當日預測與實際落差，調整判斷標準、權重或加入新變數。</p>" +
-            items +
+            '<details class="review-fold">' +
+              '<summary><div class="block-head"><h2>今日修正與檢討</h2></div></summary>' +
+              "<p>依當日預測與實際落差，調整判斷標準、權重或加入新變數。</p>" +
+              items +
+            "</details>" +
           "</section>";
       }
 
