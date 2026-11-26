@@ -1,0 +1,124 @@
+[
+  {
+    "date": "2026-11-26",
+    "weekday": "週四",
+    "summary": "外部利空加上選前情緒，今天容易放大波動。留意 09:00–09:30 開盤跳空與週六選舉前的不確定性。",
+    "summaryTone": "warning",
+    "domains": [
+      {
+        "id": "world",
+        "icon": "🌍",
+        "name": "國際面",
+        "source": "WD世界",
+        "direction": "偏空",
+        "tone": "bear",
+        "summary": "301 關稅提案、中東推升油價、晶片新規壓抑 AI 股",
+        "keyFigures": "Brent 94.61（+3.5%）",
+        "items": [
+          {
+            "title": "最高 15% 關稅提案",
+            "tone": "bear",
+            "detail": "美國擬對台商品加徵 Section 301 關稅",
+            "notes": ["意見徵詢至 2027/1/5，明年 2–3 月前不會生效"]
+          },
+          {
+            "title": "Brent 94.61（+3.5%）",
+            "tone": "bull",
+            "detail": "中東荷莫茲緊張推升油價",
+            "notes": []
+          },
+          {
+            "title": "晶片遠端存取新規",
+            "tone": "bear",
+            "detail": "效應擴散，美股 AI 股偏弱；俄烏互襲能源設施",
+            "notes": []
+          }
+        ]
+      },
+      {
+        "id": "social",
+        "icon": "🗳️",
+        "name": "社會面",
+        "source": "CY社會",
+        "direction": "偏空",
+        "tone": "bear",
+        "summary": "昨日情緒 -3（財經面 -4），台股重挫後恐慌與選前對立",
+        "keyFigures": "情緒 -3",
+        "items": [
+          {
+            "title": "台股重挫 1,926 點（-4.8%）",
+            "tone": "bear",
+            "detail": "外資連 8 賣，財經面最悲觀（-4）",
+            "notes": []
+          },
+          {
+            "title": "選前對立升至最高點",
+            "tone": "warning",
+            "detail": "沈伯洋取消實體選前之夜引發路權爭議",
+            "notes": ["11/28 九合一選舉＋第 22 案公投投票"]
+          }
+        ]
+      },
+      {
+        "id": "astro",
+        "icon": "✨",
+        "name": "天象面",
+        "source": "CS天球，僅供情緒參考",
+        "direction": "謹慎",
+        "tone": "warning",
+        "summary": "日衝天王象徵突發翻轉，13:23 後月亮空亡",
+        "keyFigures": "分數 -0.432｜機率 39.4%",
+        "items": [
+          {
+            "title": "分數 -0.432｜上漲機率 39.4%",
+            "tone": "bear",
+            "detail": "模型樣本外準確度 49.7%，只當情緒參考",
+            "notes": ["昨日預測方向失準"]
+          },
+          {
+            "title": "日衝天王＋天拱冥",
+            "tone": "warning",
+            "detail": "象徵突發與劇烈翻轉，與關稅消息面吻合",
+            "notes": []
+          },
+          {
+            "title": "13:23 後月亮空亡",
+            "tone": "warning",
+            "detail": "尾盤留意情緒與波動",
+            "notes": []
+          }
+        ]
+      },
+      {
+        "id": "market",
+        "icon": "📊",
+        "name": "市場指標",
+        "source": "",
+        "direction": "波動大",
+        "tone": "warning",
+        "summary": "極度恐懼、美股感恩節休市缺指引，台積電 ADR 溢價支撐開盤",
+        "keyFigures": "VIX 58｜恐懼貪婪 11",
+        "items": [
+          {
+            "title": "VIX 58｜恐懼貪婪指數 11",
+            "tone": "warning",
+            "detail": "市場處於極度恐懼區間",
+            "notes": []
+          },
+          {
+            "title": "美股感恩節休市",
+            "tone": "warning",
+            "detail": "缺少外部指引，量能可能偏低",
+            "notes": []
+          },
+          {
+            "title": "台積電 ADR 溢價約 5.5%",
+            "tone": "bull",
+            "detail": "開盤可能先反彈，但盤中波動仍大",
+            "notes": []
+          }
+        ]
+      }
+    ]
+  }
+]
