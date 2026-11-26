@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>每日早晚彙整</title>
+  <title>每日資訊早晚報</title>
   <meta name="description" content="平日早晚四方一頁式彙整：國際、社群、天象、股市。">
   <style>
     :root {
@@ -237,7 +237,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>每日早晚彙整</h1>
+      <h1>每日資訊早晚報</h1>
       <p class="sub">國際藍、社群橘、天象紫、股市青綠；社群以安定／分裂標示，國際、天象、股市與漲跌數字仍依台股慣例紅漲綠跌。</p>
       <label>
         <span class="visually-hidden" style="position:absolute;left:-9999px">日期／時段</span>
@@ -428,7 +428,7 @@
             app.innerHTML = '<p class="error">沒有可顯示的彙整。</p>';
             return;
           }
-          document.title = brief.date + " " + brief.sessionLabel + "｜每日早晚彙整";
+          document.title = brief.date + " " + brief.sessionLabel + "｜每日資訊早晚報";
           app.innerHTML = render(brief);
         }
         document.getElementById("briefSelect").addEventListener("change", function (event) {
