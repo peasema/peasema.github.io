@@ -18,8 +18,7 @@
   --market: #0f766e;
   --focus: #1d4ed8;
   --shadow: 0 16px 40px rgba(28, 25, 21, 0.12);
-  --sans: "PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", sans-serif;
-  --serif: "Songti TC", "Noto Serif CJK TC", "Noto Serif TC", "PMingLiU", "Source Han Serif TC", "PingFang TC", "Noto Sans CJK TC", "Microsoft JhengHei", serif;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", sans-serif;
   --sticky-offset: 148px;
   --radius: 14px;
 }
@@ -58,8 +57,11 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   font-size: 17px;
-  line-height: 1.75;
+  font-weight: 400;
+  line-height: 1.7;
   overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 :focus { outline: none; }
@@ -174,11 +176,10 @@ h1, h2, h3, p { overflow-wrap: break-word; }
 }
 .brand h1 {
   margin: 0;
-  font-family: var(--serif);
   font-size: 1.14rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.25;
+  letter-spacing: 0;
+  line-height: 1.3;
 }
 
 #updatedAt {
@@ -235,6 +236,7 @@ h1, h2, h3, p { overflow-wrap: break-word; }
   padding: 0 10px;
   max-width: 100%;
   min-width: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .session-switch {
@@ -341,7 +343,8 @@ main.wrap { padding: 16px 0 28px; }
   margin: 0 0 6px;
   color: var(--muted);
   font-size: 0.84rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .lede-head,
@@ -358,12 +361,12 @@ main.wrap { padding: 16px 0 28px; }
 .domain h2,
 .review h2,
 .sources h2 {
-  font-family: var(--serif);
   font-weight: 700;
   line-height: 1.35;
+  letter-spacing: 0;
   margin: 0;
 }
-.lede h2 { font-size: 1.05rem; letter-spacing: 0.08em; }
+.lede h2 { font-size: 1.05rem; font-weight: 600; }
 .domain h2,
 .review h2 { font-size: 1.32rem; }
 .sources h2 { font-size: 1.05rem; margin-bottom: 4px; }
@@ -371,14 +374,15 @@ main.wrap { padding: 16px 0 28px; }
 .deck {
   margin: 10px 0 0;
   color: var(--ink);
-  font-family: var(--serif);
   font-size: 1.28rem;
-  line-height: 1.55;
+  font-weight: 500;
+  line-height: 1.65;
 }
 .edition {
   margin: 0 0 12px;
   color: var(--muted);
   font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .rh {
@@ -459,6 +463,7 @@ main.wrap { padding: 16px 0 28px; }
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.45;
+  font-variant-numeric: tabular-nums;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -483,8 +488,8 @@ main.wrap { padding: 16px 0 28px; }
 
 .metric {
   margin: 8px 0 0;
-  font-family: var(--serif);
   font-size: 1.38rem;
+  font-weight: 600;
   line-height: 1.35;
   font-variant-numeric: tabular-nums;
 }
@@ -604,7 +609,7 @@ details[open] > summary::before { transform: rotate(45deg); margin-top: 0.15em; 
   background: var(--bg-elev);
   z-index: 1;
 }
-.sheet th { color: var(--muted); font-weight: 650; font-size: 0.78rem; }
+.sheet th { color: var(--muted); font-weight: 600; font-size: 0.78rem; }
 
 .review { margin-top: 26px; }
 .review h2 { margin-bottom: 10px; }
@@ -612,8 +617,9 @@ details[open] > summary::before { transform: rotate(45deg); margin-top: 0.15em; 
 .review-card { padding: 14px 14px 12px; }
 .review-card h3 {
   margin: 0 0 8px;
-  font-family: var(--serif);
   font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 .review-row {
   display: grid;
@@ -700,8 +706,9 @@ dialog::backdrop { background: rgba(20, 18, 16, 0.48); }
 }
 .archive-head h2 {
   margin: 0;
-  font-family: var(--serif);
   font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.35;
 }
 .archive-day { padding: 10px 0; border-top: 1px solid var(--line); }
 .archive-day h3 {

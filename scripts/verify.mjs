@@ -52,6 +52,10 @@ const css = readFileSync(join(root, "assets/css/app.css"), "utf8");
 for (const token of ["--world", "--social", "--astro", "--market", "--up", "--down", "data-theme"]) {
   assert(css.includes(token), `stylesheet missing ${token}`);
 }
+assert(css.includes('"Inter"'), "stylesheet is missing Inter");
+assert(!/\bserif\b/.test(css.replace(/sans-serif/g, "")), "stylesheet still names a serif family");
+assert(html.includes("fonts.googleapis.com") && html.includes("display=swap"), "Google Fonts stylesheet missing");
+assert(html.includes("Noto+Sans+TC"), "Noto Sans TC is not loaded");
 
 const format = await import(pathToFileURL(join(root, "assets/js/format.js")).href);
 const normalize = await import(pathToFileURL(join(root, "assets/js/normalize.js")).href);
