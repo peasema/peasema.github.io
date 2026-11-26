@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>團隊每日晨間彙整追蹤</title>
-  <meta name="description" content="團隊每日開盤前的國際、社會、天象與市場重點彙整。">
+  <title>團隊每日早晚彙整總表</title>
+  <meta name="description" content="團隊每日 08:20 晨間與 20:30 晚間，彙整國際、社群、天象與股市重點。">
   <style>
     :root {
       --bg: #f4f1ea;
@@ -70,7 +70,7 @@
       letter-spacing: 0.02em;
     }
 
-    .lede, .status, footer {
+    .lede, .status, footer, .note {
       color: var(--muted);
       font-size: 0.92rem;
     }
@@ -131,7 +131,7 @@
     .summary {
       border-radius: 0.9rem;
       padding: 0.95rem 1rem;
-      margin: 0 0 1rem;
+      margin: 0 0 0.7rem;
       border: 1px solid transparent;
     }
 
@@ -149,6 +149,8 @@
     .summary.tone-bull .kicker { color: var(--bull); }
     .summary.tone-warning .kicker { color: var(--warning); }
     .summary.tone-bear .kicker { color: var(--bear); }
+
+    .note { margin: 0 0 1rem; }
 
     h2 {
       font-size: 0.95rem;
@@ -208,6 +210,32 @@
     .figures {
       font-weight: 700;
       font-size: 0.95rem;
+    }
+
+    .props {
+      margin: 0.65rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .props > div {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.2rem 0.8rem;
+      font-size: 0.92rem;
+    }
+
+    .props dt {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .props dd {
+      margin: 0;
+      font-weight: 700;
+      text-align: right;
     }
 
     details {
@@ -280,11 +308,11 @@
 <body>
   <main>
     <header>
-      <h1>團隊每日晨間彙整追蹤</h1>
-      <p class="lede">平日開盤前彙整國際、社會、天象與市場重點。燈號依台股慣例標示方向，手機直向即可閱讀。</p>
+      <h1>團隊每日早晚彙整總表</h1>
+      <p class="lede">平日 08:20 晨間與 20:30 晚間，由上往下彙整國際、社群、天象與股市四方重點。燈號依台股慣例標示方向，手機直向即可像滑新聞一樣閱讀。</p>
       <ul class="legend">
         <li><span class="swatch bull" aria-hidden="true"></span>紅色＝偏多／上漲</li>
-        <li><span class="swatch warning" aria-hidden="true"></span>黃色＝謹慎／波動大</li>
+        <li><span class="swatch warning" aria-hidden="true"></span>黃色＝謹慎／觀望</li>
         <li><span class="swatch bear" aria-hidden="true"></span>綠色＝偏空／下跌</li>
       </ul>
     </header>
@@ -293,17 +321,17 @@
       <p class="status">資料載入中…</p>
     </div>
 
-    <footer>本頁僅為團隊晨間彙整紀錄，不構成投資建議。</footer>
+    <footer>本頁為團隊早晚彙整紀錄。天象僅供情緒參考；股市數字僅供數據參考，不構成投資建議。</footer>
   </main>
 
   <script>
     const TONE_LABEL = { bull: "偏多", warning: "謹慎", bear: "偏空" };
 
     const escapeHtml = (value) => String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, """)
       .replace(/'/g, "&#39;");
 
     const toneClass = (tone) => {
@@ -312,17 +340,33 @@
       return "warning";
     };
 
-    const formatDate = (brief) => `${brief.date}${brief.weekday ? `（${brief.weekday}）` : ""}`;
+    const briefId = (brief, index) =>
+      `${brief.date || ""}__${brief.session || "morning"}__${index}`;
+
+    const formatDate = (brief) => {
+      const session = brief.sessionLabel
+        || (brief.session === "evening" ? "晚間完整彙整" : "晨間彙整");
+      return `${brief.date}${brief.weekday ? `（${brief.weekday}）` : ""}｜${session}`;
+    };
+
+    const renderProps = (properties) => {
+      if (!Array.isArray(properties) || properties.length === 0) return "";
+      const rows = properties.map((item) =>
+        `<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd></div>`
+      ).join("");
+      return `<dl class="props">${rows}</dl>`;
+    };
 
     const renderBrief = (brief) => {
       const summaryTone = toneClass(brief.summaryTone);
+      const lead = brief.summaryLead ? `｜${brief.summaryLead}` : "";
       const cards = (brief.domains || []).map((domain) => {
         const tone = toneClass(domain.tone);
         const source = domain.source ? `<span class="source">（${escapeHtml(domain.source)}）</span>` : "";
         return `
           <article class="card tone-${tone}">
             <div class="card-head">
-              <div class="card-title">${escapeHtml(domain.icon || "")} ${escapeHtml(domain.name)}${source}</div>
+              <div class="card-title">${escapeHtml(domain.name)}${source}</div>
               <div class="badge tone-${tone}">${escapeHtml(domain.direction || TONE_LABEL[tone] || "")}</div>
             </div>
             <p class="card-summary">${escapeHtml(domain.summary || "")}</p>
@@ -345,52 +389,73 @@
         }).join("");
 
         return `
-          <details>
+          <details open>
             <summary>
               <div class="details-head">
-                <div class="details-title">${escapeHtml(domain.icon || "")} ${escapeHtml(domain.name)}${source}</div>
+                <div class="details-title">${escapeHtml(domain.name)}${source}</div>
                 <div class="badge tone-${tone}">${escapeHtml(domain.direction || TONE_LABEL[tone] || "")}</div>
               </div>
             </summary>
             <div class="details-body">
               <p class="card-summary">${escapeHtml(domain.summary || "")}</p>
+              ${renderProps(domain.properties)}
               <ul class="item-list">${items}</ul>
             </div>
           </details>`;
       }).join("");
 
+      const reviews = (brief.dailyReview || []).filter((item) => item && (item.unit || item.summary));
+      const reviewBlock = reviews.length === 0 ? "" : `
+        <h2>今日修正與檢討</h2>
+        <div class="overview">
+          ${reviews.map((item) => `
+            <article class="card">
+              <div class="card-head">
+                <div class="card-title">${escapeHtml(item.unit || "")}</div>
+              </div>
+              <p class="card-summary">${escapeHtml(item.summary || "")}</p>
+            </article>`).join("")}
+        </div>`;
+
       return `
         <section class="summary tone-${summaryTone}">
-          <div class="kicker">總結｜${escapeHtml(formatDate(brief))}</div>
+          <div class="kicker">今日總覽結論${escapeHtml(lead)}｜${escapeHtml(formatDate(brief))}</div>
           <p>${escapeHtml(brief.summary || "")}</p>
         </section>
-        <h2>四面總覽</h2>
+        ${brief.rhNote ? `<p class="note">${escapeHtml(brief.rhNote)}</p>` : ""}
+        <h2>四方燈號一覽</h2>
         <div class="overview">${cards}</div>
-        <h2>細項（點開展開）</h2>
-        ${sections}`;
+        <h2>國際、社群、天象、股市</h2>
+        ${sections}
+        ${reviewBlock}`;
     };
 
     const mount = (briefs) => {
       const app = document.getElementById("app");
       if (!Array.isArray(briefs) || briefs.length === 0) {
-        app.innerHTML = `<p class="status error">目前還沒有可顯示的晨間彙整。</p>`;
+        app.innerHTML = `<p class="status error">目前還沒有可顯示的彙整。</p>`;
         return;
       }
 
-      const sorted = [...briefs].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const sorted = [...briefs].sort((a, b) => {
+        const byDate = String(b.date || "").localeCompare(String(a.date || ""));
+        if (byDate !== 0) return byDate;
+        const rank = (item) => (item.session === "evening" ? 0 : 1);
+        return rank(a) - rank(b);
+      });
       const options = sorted.map((brief, index) =>
-        `<option value="${escapeHtml(brief.date)}" ${index === 0 ? "selected" : ""}>${escapeHtml(formatDate(brief))}</option>`
+        `<option value="${escapeHtml(briefId(brief, index))}" ${index === 0 ? "selected" : ""}>${escapeHtml(formatDate(brief))}</option>`
       ).join("");
 
       app.innerHTML = `
-        <label for="date-select">選擇日期</label>
+        <label for="date-select">選擇日期與時段</label>
         <select id="date-select">${options}</select>
         <div id="brief-view"></div>`;
 
       const select = document.getElementById("date-select");
       const view = document.getElementById("brief-view");
-      const show = (date) => {
-        const brief = sorted.find((item) => item.date === date) || sorted[0];
+      const show = (id) => {
+        const brief = sorted.find((item, index) => briefId(item, index) === id) || sorted[0];
         view.innerHTML = renderBrief(brief);
       };
 
