@@ -5,446 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>每日資訊早晚報</title>
   <meta name="description" content="平日早晚四方一頁式彙整：國際、社群、天象、股市。">
-  <style>
-    :root {
-      --bg: #f6f4ef;
-      --card: #ffffff;
-      --text: #1c1917;
-      --muted: #57534e;
-      --line: #e7e5e4;
-      --subtle: #f5f5f4;
-      --world: #2563eb;
-      --social: #d97706;
-      --astro: #7c3aed;
-      --market: #0d9488;
-      --bull: #dc2626;
-      --bear: #16a34a;
-      --warn: #ca8a04;
-      --radius: 12px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0c0a09;
-        --card: #1c1917;
-        --text: #fafaf9;
-        --muted: #a8a29e;
-        --line: #292524;
-        --subtle: #292524;
+  <meta name="theme-color" content="#f4f1ea" id="themeColor">
+  <meta name="apple-mobile-web-app-title" content="每日資訊早晚報">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css?v=20261126f">
+  <script>
+    (function () {
+      var theme = "light";
+      try {
+        var saved = localStorage.getItem("brief-theme");
+        if (saved === "light" || saved === "dark") theme = saved;
+        else if (window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+      } catch (err) {
+        theme = "light";
       }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-    }
-    .wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 28px 20px 64px;
-    }
-    header { margin-bottom: 20px; }
-    h1 {
-      font-size: 1.45rem;
-      font-weight: 700;
-      margin: 0 0 4px;
-      letter-spacing: -0.02em;
-    }
-    .sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin: 0 0 16px;
-    }
-    select {
-      width: 100%;
-      max-width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--card);
-      color: var(--text);
-      font: inherit;
-    }
-    .callout {
-      margin: 16px 0 12px;
-      padding: 14px 16px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      border-left: 4px solid var(--warn);
-    }
-    .callout.danger { border-left-color: var(--bull); }
-    .callout.success { border-left-color: var(--bear); }
-    .callout.warning { border-left-color: var(--warn); }
-    .callout-lead {
-      font-weight: 700;
-      margin: 0 0 4px;
-    }
-    .callout p { margin: 0; }
-    .capsules {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0;
-    }
-    .capsule {
-      flex: 1 1 148px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      background: var(--card);
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      border-left-width: 3px;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      flex: 0 0 auto;
-    }
-    .capsule-name { font-weight: 650; }
-    .capsule-metric { color: var(--muted); flex: 1 1 auto; font-size: 0.92rem; }
-    .rh {
-      color: var(--muted);
-      font-size: 0.86rem;
-      margin: 0 0 8px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 1px 8px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 650;
-      line-height: 1.6;
-      white-space: nowrap;
-    }
-    .badge.danger, .chg.up, .flag.up { color: var(--bull); background: color-mix(in srgb, var(--bull) 12%, transparent); }
-    .badge.success, .chg.down, .flag.down { color: var(--bear); background: color-mix(in srgb, var(--bear) 12%, transparent); }
-    .badge.warning, .flag.mid { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
-    section.domain, section.block {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px 16px 14px;
-      margin: 16px 0;
-    }
-    section.domain { border-left-width: 4px; }
-    .domain-head, .block-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-    .domain-head h2, .block-head h2 {
-      font-size: 1.08rem;
-      margin: 0;
-      flex: 1 1 auto;
-    }
-    .caption {
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin: 0 0 12px;
-    }
-    .facts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 18px;
-      margin: 0 0 10px;
-    }
-    .fact { min-width: 120px; }
-    .fact dt {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin: 0;
-    }
-    .fact dd {
-      margin: 0;
-      font-weight: 650;
-    }
-    ul {
-      margin: 0;
-      padding-left: 1.15em;
-    }
-    li { margin: 0.2em 0; }
-    details {
-      margin-top: 10px;
-      border-top: 1px solid var(--line);
-      padding-top: 8px;
-    }
-    summary {
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 0.9rem;
-      user-select: none;
-    }
-    details.review-fold {
-      margin-top: 0;
-      border-top: 0;
-      padding-top: 0;
-    }
-    details.review-fold > summary {
-      color: inherit;
-      font-size: inherit;
-    }
-    details.review-fold > summary .block-head {
-      display: inline-flex;
-      margin-bottom: 0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 10px 0;
-      font-size: 0.92rem;
-    }
-    th, td {
-      text-align: left;
-      padding: 6px 4px;
-      border-bottom: 1px solid var(--line);
-    }
-    th:nth-child(2), td:nth-child(2),
-    th:nth-child(3), td:nth-child(3) { text-align: right; }
-    .review-item { margin: 14px 0 0; }
-    .review-item h3 {
-      font-size: 0.98rem;
-      margin: 0 0 4px;
-    }
-    .review-item p { margin: 0 0 6px; }
-    .links { display: grid; gap: 8px; }
-    .links a {
-      display: block;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: inherit;
-      text-decoration: none;
-      background: var(--subtle);
-    }
-    .links a:hover { border-color: color-mix(in srgb, var(--text) 22%, var(--line)); }
-    footer {
-      margin-top: 28px;
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-    .error { color: var(--bull); }
-  </style>
+      document.documentElement.setAttribute("data-theme", theme);
+      var meta = document.getElementById("themeColor");
+      if (meta) meta.setAttribute("content", theme === "dark" ? "#12110e" : "#f4f1ea");
+    })();
+  </script>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>每日資訊早晚報</h1>
-      <p class="sub">國際藍、社群橘、天象紫、股市青綠；社群以安定／分裂標示，國際、天象、股市與漲跌數字仍依台股慣例紅漲綠跌。</p>
-      <label>
-        <span class="visually-hidden" style="position:absolute;left:-9999px">日期／時段</span>
-        <select id="briefSelect" aria-label="日期／時段"></select>
-      </label>
-    </header>
-    <main id="app">載入中…</main>
-    <footer>
-      本頁彙整各單位當日存檔，僅供參考，不構成投資建議。社群以安定／分裂標示；國際、天象、股市與漲跌顏色依台股慣例：紅漲、綠跌。公開頁更新後約 1–2 分鐘可能尚未刷新。
-    </footer>
-  </div>
-  <script>
-    const DOMAIN_COLOR = {
-      world: "var(--world)",
-      social: "var(--social)",
-      astro: "var(--astro)",
-      market: "var(--market)"
-    };
-
-    const TEAM_LINKS = [
-      { title: "國際局勢每日追蹤（WD世界）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/3364bf35-8ef1-4f6e-9bcb-5b5b43282572" },
-      { title: "台灣社會情緒每日追蹤（CY社會）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/175108cd-1dcb-4753-a161-75444041404a" },
-      { title: "每日天象與股市情緒追蹤（SW銀河）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/a201e294-6bd3-4e4a-957f-83efce67e6e1" },
-      { title: "台股每日追蹤（SM股市）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/14d48b40-1394-4ec4-bf06-49c1ab489cf5" }
-    ];
-
-    function escapeHtml(value) {
-      const amp = String.fromCharCode(38);
-      return String(value)
-        .replace(/&/g, amp + "amp;")
-        .replace(/</g, amp + "lt;")
-        .replace(/>/g, amp + "gt;")
-        .replace(/"/g, amp + "quot;")
-        .replace(/'/g, amp + "#39;");
-    }
-
-    function badge(tone, text) {
-      const cls = tone === "danger" || tone === "success" || tone === "warning" ? tone : "warning";
-      return '<span class="badge ' + cls + '">' + escapeHtml(text) + "</span>";
-    }
-
-    function chgHtml(text) {
-      const raw = String(text);
-      const cls = raw.startsWith("+") ? "up" : raw.startsWith("-") ? "down" : "";
-      return '<span class="chg ' + cls + '">' + escapeHtml(raw) + "</span>";
-    }
-
-    function flagHtml(text) {
-      const raw = String(text);
-      if (!raw || raw === "—") return escapeHtml(raw || "—");
-      const cls = raw.includes("跌停") ? "down" : raw.includes("漲停") ? "up" : "mid";
-      return '<span class="flag ' + cls + '">' + escapeHtml(raw) + "</span>";
-    }
-
-    function render(brief) {
-      const capsules = brief.domains.map(function (domain) {
-        return (
-          '<div class="capsule" style="border-left-color:' + DOMAIN_COLOR[domain.id] + '">' +
-            '<span class="dot" style="background:' + DOMAIN_COLOR[domain.id] + '"></span>' +
-            '<span class="capsule-name">' + escapeHtml(domain.shortName) + "</span>" +
-            '<span class="capsule-metric">' + escapeHtml(domain.keyMetric) + "</span>" +
-            badge(domain.tone, domain.direction) +
-          "</div>"
-        );
-      }).join("");
-
-      const domains = brief.domains.map(function (domain) {
-        const facts = (domain.facts || []).map(function (item) {
-          return (
-            '<div class="fact"><dt>' + escapeHtml(item.label) + "</dt><dd>" +
-            escapeHtml(item.value) + "</dd></div>"
-          );
-        }).join("");
-        const highlights = (domain.highlights || []).map(function (item) {
-          return "<li>" + escapeHtml(item) + "</li>";
-        }).join("");
-        let extra = "";
-        if (domain.table && domain.table.rows && domain.table.rows.length) {
-          const head = domain.table.columns.map(function (col) {
-            return "<th>" + escapeHtml(col) + "</th>";
-          }).join("");
-          const rows = domain.table.rows.map(function (row) {
-            return (
-              "<tr>" +
-                "<td>" + escapeHtml(row[0]) + "</td>" +
-                "<td>" + escapeHtml(row[1]) + "</td>" +
-                "<td>" + chgHtml(row[2]) + "</td>" +
-                "<td>" + flagHtml(row[3]) + "</td>" +
-              "</tr>"
-            );
-          }).join("");
-          extra += "<table><thead><tr>" + head + "</tr></thead><tbody>" + rows + "</tbody></table>";
-        }
-        const detailsList = (domain.details || []).map(function (item) {
-          return "<li>" + escapeHtml(item) + "</li>";
-        }).join("");
-        if (detailsList) extra += "<ul>" + detailsList + "</ul>";
-        const detailsBlock = extra
-          ? "<details><summary>細節</summary>" + extra + "</details>"
-          : "";
-        return (
-          '<section class="domain" style="border-left-color:' + DOMAIN_COLOR[domain.id] + '">' +
-            '<div class="domain-head">' +
-              "<h2>" + escapeHtml(domain.heading) + "</h2>" +
-              badge(domain.tone, domain.direction) +
-            "</div>" +
-            '<p class="caption">' + escapeHtml(domain.rh || "") + "</p>" +
-            '<dl class="facts">' + facts + "</dl>" +
-            "<ul>" + highlights + "</ul>" +
-            detailsBlock +
-          "</section>"
-        );
-      }).join("");
-
-      let review = "";
-      if (brief.dailyReview && brief.dailyReview.length) {
-        const items = brief.dailyReview.map(function (item) {
-          return (
-            '<div class="review-item">' +
-              "<h3>" + escapeHtml(item.unit) + "</h3>" +
-              "<p><strong>現象／落差：</strong>" + escapeHtml(item.gap) + "</p>" +
-              "<p><strong>修正方法：</strong>" + escapeHtml(item.fix) + "</p>" +
-            "</div>"
-          );
-        }).join("");
-        review =
-          '<section class="block">' +
-            '<details class="review-fold">' +
-              '<summary><div class="block-head"><h2>今日修正與檢討</h2></div></summary>' +
-              "<p>依當日預測與實際落差，調整判斷標準、權重或加入新變數。</p>" +
-              items +
-            "</details>" +
-          "</section>";
-      }
-
-      const links = TEAM_LINKS.map(function (link) {
-        return '<a href="' + escapeHtml(link.href) + '" target="_blank" rel="noopener">' + escapeHtml(link.title) + "</a>";
-      }).join("");
-
-      return (
-        '<section class="block" style="padding-top:4px;background:transparent;border:0;padding-left:0;padding-right:0;margin-top:0">' +
-          '<div class="callout ' + escapeHtml(brief.summaryTone) + '">' +
-            '<div class="callout-lead">總結論｜' + escapeHtml(brief.summaryLead) + "</div>" +
-            "<p>" + escapeHtml(brief.summary) + "</p>" +
-          "</div>" +
-          '<div class="capsules">' + capsules + "</div>" +
-          '<p class="rh">' + escapeHtml(brief.rhNote || "") + "</p>" +
-        "</section>" +
-        domains +
-        review +
-        '<section class="block"><div class="block-head"><h2>隊員追蹤頁</h2></div><div class="links">' + links + "</div></section>"
-      );
-    }
-
-    function briefId(brief, index) {
-      return brief.id || ((brief.date || "brief") + "-" + (brief.session || "morning") + "-" + String(index));
-    }
-
-    function fillSelect(briefs, selectedId) {
-      const select = document.getElementById("briefSelect");
-      select.innerHTML = briefs.map(function (brief, index) {
-        const id = briefId(brief, index);
-        return (
-          '<option value="' + escapeHtml(id) + '"' +
-          (id === selectedId ? " selected" : "") + ">" +
-          escapeHtml(brief.date + "（" + (brief.weekday || "") + "）｜" + (brief.sessionLabel || "")) +
-          "</option>"
-        );
-      }).join("");
-    }
-
-    fetch("data/briefs.json?t=" + Date.now())
-      .then(function (res) {
-        if (!res.ok) throw new Error("無法載入 briefs.json");
-        return res.json();
-      })
-      .then(function (data) {
-        const briefs = Array.isArray(data) ? data : (data.briefs || []);
-        const params = new URLSearchParams(location.search);
-        const initial =
-          params.get("id") ||
-          (Array.isArray(data) ? null : data.defaultId) ||
-          briefId(briefs.find(function (item) { return item.session === "evening"; }) || briefs[0] || {}, 0);
-        fillSelect(briefs, initial);
-        const app = document.getElementById("app");
-        function show(id) {
-          const brief = briefs.find(function (item, index) { return briefId(item, index) === id; }) || briefs[0];
-          if (!brief) {
-            app.innerHTML = '<p class="error">沒有可顯示的彙整。</p>';
-            return;
-          }
-          document.title = brief.date + " " + brief.sessionLabel + "｜每日資訊早晚報";
-          app.innerHTML = render(brief);
-        }
-        document.getElementById("briefSelect").addEventListener("change", function (event) {
-          const id = event.target.value;
-          const url = new URL(location.href);
-          url.searchParams.set("id", id);
-          history.replaceState(null, "", url);
-          show(id);
-        });
-        show(initial);
-      })
-      .catch(function (err) {
-        document.getElementById("app").innerHTML =
-          '<p class="error">載入失敗：' + escapeHtml(err.message) + "</p>";
-      });
-  </script>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <a class="skip" href="#content">跳至內文</a>
+  <header class="topbar" id="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand-row">
+        <div class="brand-lockup">
+          <span class="brand-dots" aria-hidden="true">
+            <i class="dot-world"></i>
+            <i class="dot-social"></i>
+            <i class="dot-astro"></i>
+            <i class="dot-market"></i>
+          </span>
+          <div class="brand-text">
+            <a class="brand" href="./"><h1>每日資訊早晚報</h1></a>
+            <time id="updatedAt"></time>
+          </div>
+        </div>
+        <button type="button" class="ghost" id="themeToggle" aria-pressed="false">深色</button>
+      </div>
+      <div class="controls-row">
+        <div class="selectors">
+          <label class="field">
+            <span class="field-label">日期</span>
+            <select id="dateSelect" aria-label="日期"></select>
+          </label>
+          <div class="session-switch" id="sessionSwitch" role="group" aria-label="時段"></div>
+          <button type="button" class="ghost" id="archiveOpen">歷程</button>
+        </div>
+        <label class="search">
+          <span class="visually-hidden">搜尋關鍵字</span>
+          <input id="searchInput" type="search" placeholder="搜尋關鍵字" autocomplete="off" enterkeyhint="search">
+        </label>
+      </div>
+      <div class="jump-row">
+        <nav class="jumps" id="jumps" aria-label="快速前往">
+          <a class="jump jump-world" href="#domain-world" data-target="domain-world">國際</a>
+          <a class="jump jump-social" href="#domain-social" data-target="domain-social">社群</a>
+          <a class="jump jump-astro" href="#domain-astro" data-target="domain-astro">天象</a>
+          <a class="jump jump-market" href="#domain-market" data-target="domain-market">股市</a>
+          <a class="jump jump-review" href="#review" data-target="review">檢討</a>
+        </nav>
+        <button type="button" class="ghost" id="toggleDetails" aria-expanded="false">全部展開</button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap" id="content">
+    <p id="searchStatus" class="search-status" role="status" hidden></p>
+    <div id="app" class="loading" aria-busy="true">載入中…</div>
+  </main>
+  <footer class="colophon">
+    <div class="wrap">
+      <p>本頁彙整各單位當日存檔，僅供參考，不構成投資建議。</p>
+    </div>
+  </footer>
+  <dialog id="archiveDialog" aria-labelledby="archiveTitle">
+    <div class="archive-card">
+      <div class="archive-head">
+        <h2 id="archiveTitle">歷程</h2>
+        <button type="button" class="ghost" id="archiveClose">關閉</button>
+      </div>
+      <div id="archiveList"></div>
+    </div>
+  </dialog>
+  <noscript><p>需要啟用 JavaScript 才能載入 data/briefs.json。</p></noscript>
+  <script type="module" src="assets/js/app.js?v=20261126f"></script>
 </body>
 </html>
