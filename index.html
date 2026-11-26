@@ -265,12 +265,13 @@
     ];
 
     function escapeHtml(value) {
+      const amp = String.fromCharCode(38);
       return String(value)
-        .replace(/&/g, "&")
-        .replace(/</g, "<")
-        .replace(/>/g, ">")
-        .replace(/"/g, """)
-        .replace(/'/g, "&#39;");
+        .replace(/&/g, amp + "amp;")
+        .replace(/</g, amp + "lt;")
+        .replace(/>/g, amp + "gt;")
+        .replace(/"/g, amp + "quot;")
+        .replace(/'/g, amp + "#39;");
     }
 
     function badge(tone, text) {
