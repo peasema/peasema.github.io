@@ -1,479 +1,434 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>團隊每日早晚彙整總表</title>
-  <meta name="description" content="團隊每日 08:20 晨間與 20:30 晚間，彙整國際、社群、天象與股市重點。">
+  <title>每日早晚彙整</title>
+  <meta name="description" content="平日早晚四方一頁式彙整：國際、社群、天象、股市。">
   <style>
     :root {
-      --bg: #f4f1ea;
-      --ink: #1c1917;
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --text: #1c1917;
       --muted: #57534e;
-      --card: #fffdf8;
-      --line: #e7e0d4;
-      --shadow: 0 1px 2px rgba(28, 25, 23, 0.06);
-      --bull: #c41e3a;
-      --bull-bg: #fdecee;
-      --bear: #0f7a43;
-      --bear-bg: #e8f7ee;
-      --warning: #b45309;
-      --warning-bg: #fff4e0;
-      --focus: #1d4ed8;
+      --line: #e7e5e4;
+      --subtle: #f5f5f4;
+      --world: #2563eb;
+      --social: #d97706;
+      --astro: #7c3aed;
+      --market: #0d9488;
+      --bull: #dc2626;
+      --bear: #16a34a;
+      --warn: #ca8a04;
+      --radius: 12px;
     }
-
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #12110f;
-        --ink: #f5f2eb;
-        --muted: #b5aea4;
-        --card: #1c1a17;
-        --line: #3a352e;
-        --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-        --bull: #fb7185;
-        --bull-bg: rgba(251, 113, 133, 0.14);
-        --bear: #34d399;
-        --bear-bg: rgba(52, 211, 153, 0.14);
-        --warning: #fbbf24;
-        --warning-bg: rgba(251, 191, 36, 0.14);
-        --focus: #93c5fd;
+        --bg: #0c0a09;
+        --card: #1c1917;
+        --text: #fafaf9;
+        --muted: #a8a29e;
+        --line: #292524;
+        --subtle: #292524;
       }
     }
-
     * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-
     body {
-      font-family: "Noto Sans TC", "PingFang TC", "Hiragino Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
       background: var(--bg);
-      color: var(--ink);
-      line-height: 1.6;
-      padding: 1.25rem 1rem 2.5rem;
+      color: var(--text);
+      line-height: 1.65;
     }
-
-    main {
-      width: min(42rem, 100%);
+    .wrap {
+      max-width: 760px;
       margin: 0 auto;
+      padding: 28px 20px 64px;
     }
-
+    header { margin-bottom: 20px; }
     h1 {
       font-size: 1.45rem;
-      line-height: 1.3;
-      margin: 0 0 0.4rem;
-      letter-spacing: 0.02em;
+      font-weight: 700;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
     }
-
-    .lede, .status, footer, .note {
+    .sub {
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
+      margin: 0 0 16px;
     }
-
-    .lede { margin: 0 0 0.9rem; }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 0.85rem;
-      margin: 0 0 1.15rem;
-      padding: 0;
-      list-style: none;
-      font-size: 0.86rem;
-    }
-
-    .swatch {
-      display: inline-block;
-      width: 0.7rem;
-      height: 0.7rem;
-      border-radius: 999px;
-      margin-right: 0.3rem;
-      vertical-align: 0.05rem;
-    }
-
-    .swatch.bull, .tone-bull .mark { background: var(--bull); }
-    .swatch.warning, .tone-warning .mark { background: var(--warning); }
-    .swatch.bear, .tone-bear .mark { background: var(--bear); }
-    .tone-bull { color: var(--bull); }
-    .tone-warning { color: var(--warning); }
-    .tone-bear { color: var(--bear); }
-
-    label[for="date-select"] {
-      display: block;
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 0.35rem;
-    }
-
     select {
       width: 100%;
       max-width: 100%;
-      appearance: none;
-      background: var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2357534e' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 0.9rem center;
-      color: var(--ink);
+      padding: 10px 12px;
       border: 1px solid var(--line);
-      border-radius: 0.7rem;
-      padding: 0.7rem 2.4rem 0.7rem 0.9rem;
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--text);
       font: inherit;
-      margin-bottom: 1rem;
     }
-
-    select:focus {
-      outline: 2px solid var(--focus);
-      outline-offset: 2px;
-    }
-
-    .summary {
-      border-radius: 0.9rem;
-      padding: 0.95rem 1rem;
-      margin: 0 0 0.7rem;
-      border: 1px solid transparent;
-    }
-
-    .summary p { margin: 0; }
-    .summary .kicker {
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-
-    .summary.tone-bull { background: var(--bull-bg); border-color: color-mix(in srgb, var(--bull) 35%, transparent); color: var(--ink); }
-    .summary.tone-warning { background: var(--warning-bg); border-color: color-mix(in srgb, var(--warning) 35%, transparent); color: var(--ink); }
-    .summary.tone-bear { background: var(--bear-bg); border-color: color-mix(in srgb, var(--bear) 35%, transparent); color: var(--ink); }
-    .summary.tone-bull .kicker { color: var(--bull); }
-    .summary.tone-warning .kicker { color: var(--warning); }
-    .summary.tone-bear .kicker { color: var(--bear); }
-
-    .note { margin: 0 0 1rem; }
-
-    h2 {
-      font-size: 0.95rem;
-      margin: 1.2rem 0 0.55rem;
-    }
-
-    .overview {
-      display: grid;
-      gap: 0.65rem;
-      margin: 0 0 1.2rem;
-    }
-
-    .card {
+    .callout {
+      margin: 16px 0 12px;
+      padding: 14px 16px;
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 0.9rem;
-      box-shadow: var(--shadow);
-      padding: 0.8rem 0.9rem 0.85rem 0.95rem;
-      border-left-width: 0.35rem;
-      overflow-wrap: anywhere;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--warn);
     }
-
-    .card.tone-bull { border-left-color: var(--bull); }
-    .card.tone-warning { border-left-color: var(--warning); }
-    .card.tone-bear { border-left-color: var(--bear); }
-
-    .card-head, .details-head {
+    .callout.danger { border-left-color: var(--bull); }
+    .callout.success { border-left-color: var(--bear); }
+    .callout.warning { border-left-color: var(--warn); }
+    .callout-lead {
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+    .callout p { margin: 0; }
+    .capsules {
       display: flex;
       flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 0.25rem 0.75rem;
+      gap: 8px;
+      margin: 12px 0;
     }
-
-    .card-title, .details-title {
-      font-weight: 700;
+    .capsule {
+      flex: 1 1 148px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--card);
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      border-left-width: 3px;
     }
-
-    .source {
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+    .capsule-name { font-weight: 650; }
+    .capsule-metric { color: var(--muted); flex: 1 1 auto; font-size: 0.92rem; }
+    .rh {
       color: var(--muted);
-      font-size: 0.8rem;
-      font-weight: 400;
+      font-size: 0.86rem;
+      margin: 0 0 8px;
     }
-
     .badge {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 999px;
       font-size: 0.8rem;
-      font-weight: 700;
+      font-weight: 650;
+      line-height: 1.6;
       white-space: nowrap;
     }
-
-    .card-summary {
-      margin: 0.3rem 0 0.25rem;
-      font-size: 0.92rem;
-      color: var(--muted);
-    }
-
-    .figures {
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .props {
-      margin: 0.65rem 0 0;
-      padding: 0;
-      display: grid;
-      gap: 0.35rem;
-    }
-
-    .props > div {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.2rem 0.8rem;
-      font-size: 0.92rem;
-    }
-
-    .props dt {
-      color: var(--muted);
-      font-weight: 400;
-    }
-
-    .props dd {
-      margin: 0;
-      font-weight: 700;
-      text-align: right;
-    }
-
-    details {
+    .badge.danger, .chg.up, .flag.up { color: var(--bull); background: color-mix(in srgb, var(--bull) 12%, transparent); }
+    .badge.success, .chg.down, .flag.down { color: var(--bear); background: color-mix(in srgb, var(--bear) 12%, transparent); }
+    .badge.warning, .flag.mid { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
+    section.domain, section.block {
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 0.9rem;
-      margin: 0 0 0.65rem;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 16px 16px 14px;
+      margin: 16px 0;
     }
-
-    details > summary {
-      cursor: pointer;
-      list-style: none;
-      padding: 0.8rem 0.9rem;
-      overflow-wrap: anywhere;
+    section.domain { border-left-width: 4px; }
+    .domain-head, .block-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
     }
-
-    details > summary::-webkit-details-marker { display: none; }
-
-    details > summary::after {
-      content: "展開";
-      float: right;
+    .domain-head h2, .block-head h2 {
+      font-size: 1.08rem;
+      margin: 0;
+      flex: 1 1 auto;
+    }
+    .caption {
       color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 500;
-      margin-top: 0.15rem;
+      font-size: 0.82rem;
+      margin: 0 0 12px;
     }
-
-    details[open] > summary::after { content: "收合"; }
-
-    .details-body {
-      padding: 0 0.95rem 0.95rem;
+    .facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin: 0 0 10px;
+    }
+    .fact { min-width: 120px; }
+    .fact dt {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    .fact dd {
+      margin: 0;
+      font-weight: 650;
+    }
+    ul {
+      margin: 0;
+      padding-left: 1.15em;
+    }
+    li { margin: 0.2em 0; }
+    details {
+      margin-top: 10px;
       border-top: 1px solid var(--line);
+      padding-top: 8px;
     }
-
-    .item-list, .notes {
-      margin: 0.65rem 0 0;
-      padding: 0 0 0 1.1rem;
-    }
-
-    .item-list > li {
-      margin: 0 0 0.7rem;
-      overflow-wrap: anywhere;
-    }
-
-    .item-list > li:last-child { margin-bottom: 0; }
-
-    .item-list .title { font-weight: 700; }
-
-    .item-list .detail {
-      color: var(--ink);
-      margin-top: 0.1rem;
-    }
-
-    .notes {
+    summary {
+      cursor: pointer;
       color: var(--muted);
       font-size: 0.9rem;
-      margin-top: 0.2rem;
+      user-select: none;
     }
-
-    .status { margin: 1rem 0; }
-    .status.error { color: var(--bull); }
-
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 0.92rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+    th:nth-child(2), td:nth-child(2),
+    th:nth-child(3), td:nth-child(3) { text-align: right; }
+    .review-item { margin: 14px 0 0; }
+    .review-item h3 {
+      font-size: 0.98rem;
+      margin: 0 0 4px;
+    }
+    .review-item p { margin: 0 0 6px; }
+    .links { display: grid; gap: 8px; }
+    .links a {
+      display: block;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: inherit;
+      text-decoration: none;
+      background: var(--subtle);
+    }
+    .links a:hover { border-color: color-mix(in srgb, var(--text) 22%, var(--line)); }
     footer {
-      margin-top: 1.6rem;
-      font-size: 0.82rem;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.8rem;
     }
+    .error { color: var(--bull); }
   </style>
 </head>
 <body>
-  <main>
+  <div class="wrap">
     <header>
-      <h1>團隊每日早晚彙整總表</h1>
-      <p class="lede">平日 08:20 晨間與 20:30 晚間，由上往下彙整國際、社群、天象與股市四方重點。燈號依台股慣例標示方向，手機直向即可像滑新聞一樣閱讀。</p>
-      <ul class="legend">
-        <li><span class="swatch bull" aria-hidden="true"></span>紅色＝偏多／上漲</li>
-        <li><span class="swatch warning" aria-hidden="true"></span>黃色＝謹慎／觀望</li>
-        <li><span class="swatch bear" aria-hidden="true"></span>綠色＝偏空／下跌</li>
-      </ul>
+      <h1>每日早晚彙整</h1>
+      <p class="sub">國際藍、社群橘、天象紫、股市青綠；漲跌燈號仍依台股慣例紅漲綠跌。</p>
+      <label>
+        <span class="visually-hidden" style="position:absolute;left:-9999px">日期／時段</span>
+        <select id="briefSelect" aria-label="日期／時段"></select>
+      </label>
     </header>
-
-    <div id="app">
-      <p class="status">資料載入中…</p>
-    </div>
-
-    <footer>本頁為團隊早晚彙整紀錄。天象僅供情緒參考；股市數字僅供數據參考，不構成投資建議。</footer>
-  </main>
-
+    <main id="app">載入中…</main>
+    <footer>
+      本頁彙整各單位當日存檔，僅供參考，不構成投資建議。漲跌顏色依台股慣例：紅漲、綠跌。公開頁更新後約 1–2 分鐘可能尚未刷新。
+    </footer>
+  </div>
   <script>
-    const TONE_LABEL = { bull: "偏多", warning: "謹慎", bear: "偏空" };
-
-    const escapeHtml = (value) => String(value ?? "")
-      .replace(/&/g, "&")
-      .replace(/</g, "<")
-      .replace(/>/g, ">")
-      .replace(/"/g, """)
-      .replace(/'/g, "&#39;");
-
-    const toneClass = (tone) => {
-      if (tone === "bull" || tone === "danger") return "bull";
-      if (tone === "bear" || tone === "success") return "bear";
-      return "warning";
+    const DOMAIN_COLOR = {
+      world: "var(--world)",
+      social: "var(--social)",
+      astro: "var(--astro)",
+      market: "var(--market)"
     };
 
-    const briefId = (brief, index) =>
-      `${brief.date || ""}__${brief.session || "morning"}__${index}`;
+    const TEAM_LINKS = [
+      { title: "國際局勢每日追蹤（WD世界）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/3364bf35-8ef1-4f6e-9bcb-5b5b43282572" },
+      { title: "台灣社會情緒每日追蹤（CY社會）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/175108cd-1dcb-4753-a161-75444041404a" },
+      { title: "每日天象與股市情緒追蹤（SW銀河）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/a201e294-6bd3-4e4a-957f-83efce67e6e1" },
+      { title: "台股每日追蹤（SM股市）", href: "https://cursor.com/canvas/store-00a8d795-a768-46a2-9345-0724f8b446c3/14d48b40-1394-4ec4-bf06-49c1ab489cf5" }
+    ];
 
-    const formatDate = (brief) => {
-      const session = brief.sessionLabel
-        || (brief.session === "evening" ? "晚間完整彙整" : "晨間彙整");
-      return `${brief.date}${brief.weekday ? `（${brief.weekday}）` : ""}｜${session}`;
-    };
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&")
+        .replace(/</g, "<")
+        .replace(/>/g, ">")
+        .replace(/"/g, """)
+        .replace(/'/g, "&#39;");
+    }
 
-    const renderProps = (properties) => {
-      if (!Array.isArray(properties) || properties.length === 0) return "";
-      const rows = properties.map((item) =>
-        `<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd></div>`
-      ).join("");
-      return `<dl class="props">${rows}</dl>`;
-    };
+    function badge(tone, text) {
+      const cls = tone === "danger" || tone === "success" || tone === "warning" ? tone : "warning";
+      return '<span class="badge ' + cls + '">' + escapeHtml(text) + "</span>";
+    }
 
-    const renderBrief = (brief) => {
-      const summaryTone = toneClass(brief.summaryTone);
-      const lead = brief.summaryLead ? `｜${brief.summaryLead}` : "";
-      const cards = (brief.domains || []).map((domain) => {
-        const tone = toneClass(domain.tone);
-        const source = domain.source ? `<span class="source">（${escapeHtml(domain.source)}）</span>` : "";
-        return `
-          <article class="card tone-${tone}">
-            <div class="card-head">
-              <div class="card-title">${escapeHtml(domain.name)}${source}</div>
-              <div class="badge tone-${tone}">${escapeHtml(domain.direction || TONE_LABEL[tone] || "")}</div>
-            </div>
-            <p class="card-summary">${escapeHtml(domain.summary || "")}</p>
-            <div class="figures tone-${tone}">${escapeHtml(domain.keyFigures || "")}</div>
-          </article>`;
+    function chgHtml(text) {
+      const raw = String(text);
+      const cls = raw.startsWith("+") ? "up" : raw.startsWith("-") ? "down" : "";
+      return '<span class="chg ' + cls + '">' + escapeHtml(raw) + "</span>";
+    }
+
+    function flagHtml(text) {
+      const raw = String(text);
+      if (!raw || raw === "—") return escapeHtml(raw || "—");
+      const cls = raw.includes("跌停") ? "down" : raw.includes("漲停") ? "up" : "mid";
+      return '<span class="flag ' + cls + '">' + escapeHtml(raw) + "</span>";
+    }
+
+    function render(brief) {
+      const capsules = brief.domains.map(function (domain) {
+        return (
+          '<div class="capsule" style="border-left-color:' + DOMAIN_COLOR[domain.id] + '">' +
+            '<span class="dot" style="background:' + DOMAIN_COLOR[domain.id] + '"></span>' +
+            '<span class="capsule-name">' + escapeHtml(domain.shortName) + "</span>" +
+            '<span class="capsule-metric">' + escapeHtml(domain.keyMetric) + "</span>" +
+            badge(domain.tone, domain.direction) +
+          "</div>"
+        );
       }).join("");
 
-      const sections = (brief.domains || []).map((domain) => {
-        const tone = toneClass(domain.tone);
-        const source = domain.source ? `<span class="source">（${escapeHtml(domain.source)}）</span>` : "";
-        const items = (domain.items || []).map((item) => {
-          const itemTone = toneClass(item.tone);
-          const notes = (item.notes || []).filter(Boolean).map((note) => `<li>${escapeHtml(note)}</li>`).join("");
-          return `
-            <li>
-              <div class="title tone-${itemTone}">${escapeHtml(item.title)}</div>
-              <div class="detail">${escapeHtml(item.detail || "")}</div>
-              ${notes ? `<ul class="notes">${notes}</ul>` : ""}
-            </li>`;
+      const domains = brief.domains.map(function (domain) {
+        const facts = (domain.facts || []).map(function (item) {
+          return (
+            '<div class="fact"><dt>' + escapeHtml(item.label) + "</dt><dd>" +
+            escapeHtml(item.value) + "</dd></div>"
+          );
         }).join("");
-
-        return `
-          <details open>
-            <summary>
-              <div class="details-head">
-                <div class="details-title">${escapeHtml(domain.name)}${source}</div>
-                <div class="badge tone-${tone}">${escapeHtml(domain.direction || TONE_LABEL[tone] || "")}</div>
-              </div>
-            </summary>
-            <div class="details-body">
-              <p class="card-summary">${escapeHtml(domain.summary || "")}</p>
-              ${renderProps(domain.properties)}
-              <ul class="item-list">${items}</ul>
-            </div>
-          </details>`;
+        const highlights = (domain.highlights || []).map(function (item) {
+          return "<li>" + escapeHtml(item) + "</li>";
+        }).join("");
+        let extra = "";
+        if (domain.table && domain.table.rows && domain.table.rows.length) {
+          const head = domain.table.columns.map(function (col) {
+            return "<th>" + escapeHtml(col) + "</th>";
+          }).join("");
+          const rows = domain.table.rows.map(function (row) {
+            return (
+              "<tr>" +
+                "<td>" + escapeHtml(row[0]) + "</td>" +
+                "<td>" + escapeHtml(row[1]) + "</td>" +
+                "<td>" + chgHtml(row[2]) + "</td>" +
+                "<td>" + flagHtml(row[3]) + "</td>" +
+              "</tr>"
+            );
+          }).join("");
+          extra += "<table><thead><tr>" + head + "</tr></thead><tbody>" + rows + "</tbody></table>";
+        }
+        const detailsList = (domain.details || []).map(function (item) {
+          return "<li>" + escapeHtml(item) + "</li>";
+        }).join("");
+        if (detailsList) extra += "<ul>" + detailsList + "</ul>";
+        const detailsBlock = extra
+          ? "<details><summary>細節</summary>" + extra + "</details>"
+          : "";
+        return (
+          '<section class="domain" style="border-left-color:' + DOMAIN_COLOR[domain.id] + '">' +
+            '<div class="domain-head">' +
+              "<h2>" + escapeHtml(domain.heading) + "</h2>" +
+              badge(domain.tone, domain.direction) +
+            "</div>" +
+            '<p class="caption">' + escapeHtml(domain.rh || "") + "</p>" +
+            '<dl class="facts">' + facts + "</dl>" +
+            "<ul>" + highlights + "</ul>" +
+            detailsBlock +
+          "</section>"
+        );
       }).join("");
 
-      const reviews = (brief.dailyReview || []).filter((item) => item && (item.unit || item.summary));
-      const reviewBlock = reviews.length === 0 ? "" : `
-        <h2>今日修正與檢討</h2>
-        <div class="overview">
-          ${reviews.map((item) => `
-            <article class="card">
-              <div class="card-head">
-                <div class="card-title">${escapeHtml(item.unit || "")}</div>
-              </div>
-              <p class="card-summary">${escapeHtml(item.summary || "")}</p>
-            </article>`).join("")}
-        </div>`;
-
-      return `
-        <section class="summary tone-${summaryTone}">
-          <div class="kicker">今日總覽結論${escapeHtml(lead)}｜${escapeHtml(formatDate(brief))}</div>
-          <p>${escapeHtml(brief.summary || "")}</p>
-        </section>
-        ${brief.rhNote ? `<p class="note">${escapeHtml(brief.rhNote)}</p>` : ""}
-        <h2>四方燈號一覽</h2>
-        <div class="overview">${cards}</div>
-        <h2>國際、社群、天象、股市</h2>
-        ${sections}
-        ${reviewBlock}`;
-    };
-
-    const mount = (briefs) => {
-      const app = document.getElementById("app");
-      if (!Array.isArray(briefs) || briefs.length === 0) {
-        app.innerHTML = `<p class="status error">目前還沒有可顯示的彙整。</p>`;
-        return;
+      let review = "";
+      if (brief.dailyReview && brief.dailyReview.length) {
+        const items = brief.dailyReview.map(function (item) {
+          return (
+            '<div class="review-item">' +
+              "<h3>" + escapeHtml(item.unit) + "</h3>" +
+              "<p><strong>現象／落差：</strong>" + escapeHtml(item.gap) + "</p>" +
+              "<p><strong>修正方法：</strong>" + escapeHtml(item.fix) + "</p>" +
+            "</div>"
+          );
+        }).join("");
+        review =
+          '<section class="block">' +
+            '<div class="block-head"><h2>今日修正與檢討</h2></div>' +
+            "<p>依當日預測與實際落差，調整判斷標準、權重或加入新變數。</p>" +
+            items +
+          "</section>";
       }
 
-      const sorted = [...briefs].sort((a, b) => {
-        const byDate = String(b.date || "").localeCompare(String(a.date || ""));
-        if (byDate !== 0) return byDate;
-        const rank = (item) => (item.session === "evening" ? 0 : 1);
-        return rank(a) - rank(b);
+      const links = TEAM_LINKS.map(function (link) {
+        return '<a href="' + escapeHtml(link.href) + '" target="_blank" rel="noopener">' + escapeHtml(link.title) + "</a>";
+      }).join("");
+
+      return (
+        '<section class="block" style="padding-top:4px;background:transparent;border:0;padding-left:0;padding-right:0;margin-top:0">' +
+          '<div class="callout ' + escapeHtml(brief.summaryTone) + '">' +
+            '<div class="callout-lead">總結論｜' + escapeHtml(brief.summaryLead) + "</div>" +
+            "<p>" + escapeHtml(brief.summary) + "</p>" +
+          "</div>" +
+          '<div class="capsules">' + capsules + "</div>" +
+          '<p class="rh">' + escapeHtml(brief.rhNote || "") + "</p>" +
+        "</section>" +
+        domains +
+        review +
+        '<section class="block"><div class="block-head"><h2>隊員追蹤頁</h2></div><div class="links">' + links + "</div></section>"
+      );
+    }
+
+    function briefId(brief, index) {
+      return brief.id || ((brief.date || "brief") + "-" + (brief.session || "morning") + "-" + String(index));
+    }
+
+    function fillSelect(briefs, selectedId) {
+      const select = document.getElementById("briefSelect");
+      select.innerHTML = briefs.map(function (brief, index) {
+        const id = briefId(brief, index);
+        return (
+          '<option value="' + escapeHtml(id) + '"' +
+          (id === selectedId ? " selected" : "") + ">" +
+          escapeHtml(brief.date + "（" + (brief.weekday || "") + "）｜" + (brief.sessionLabel || "")) +
+          "</option>"
+        );
+      }).join("");
+    }
+
+    fetch("data/briefs.json?t=" + Date.now())
+      .then(function (res) {
+        if (!res.ok) throw new Error("無法載入 briefs.json");
+        return res.json();
+      })
+      .then(function (data) {
+        const briefs = Array.isArray(data) ? data : (data.briefs || []);
+        const params = new URLSearchParams(location.search);
+        const initial =
+          params.get("id") ||
+          (Array.isArray(data) ? null : data.defaultId) ||
+          briefId(briefs.find(function (item) { return item.session === "evening"; }) || briefs[0] || {}, 0);
+        fillSelect(briefs, initial);
+        const app = document.getElementById("app");
+        function show(id) {
+          const brief = briefs.find(function (item, index) { return briefId(item, index) === id; }) || briefs[0];
+          if (!brief) {
+            app.innerHTML = '<p class="error">沒有可顯示的彙整。</p>';
+            return;
+          }
+          document.title = brief.date + " " + brief.sessionLabel + "｜每日早晚彙整";
+          app.innerHTML = render(brief);
+        }
+        document.getElementById("briefSelect").addEventListener("change", function (event) {
+          const id = event.target.value;
+          const url = new URL(location.href);
+          url.searchParams.set("id", id);
+          history.replaceState(null, "", url);
+          show(id);
+        });
+        show(initial);
+      })
+      .catch(function (err) {
+        document.getElementById("app").innerHTML =
+          '<p class="error">載入失敗：' + escapeHtml(err.message) + "</p>";
       });
-      const options = sorted.map((brief, index) =>
-        `<option value="${escapeHtml(briefId(brief, index))}" ${index === 0 ? "selected" : ""}>${escapeHtml(formatDate(brief))}</option>`
-      ).join("");
-
-      app.innerHTML = `
-        <label for="date-select">選擇日期與時段</label>
-        <select id="date-select">${options}</select>
-        <div id="brief-view"></div>`;
-
-      const select = document.getElementById("date-select");
-      const view = document.getElementById("brief-view");
-      const show = (id) => {
-        const brief = sorted.find((item, index) => briefId(item, index) === id) || sorted[0];
-        view.innerHTML = renderBrief(brief);
-      };
-
-      select.addEventListener("change", () => show(select.value));
-      show(select.value);
-    };
-
-    (async () => {
-      const app = document.getElementById("app");
-      try {
-        const response = await fetch("./data/briefs.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        mount(await response.json());
-      } catch (error) {
-        app.innerHTML = `<p class="status error">無法載入彙整資料，請稍後再試。</p>`;
-        console.error(error);
-      }
-    })();
   </script>
 </body>
 </html>
