@@ -1,6 +1,6 @@
 # 每日資訊早晚報
 
-公開網頁，彙整平日早晨與晚間的國際、社群、天象、股市四方情報，用手機直向或桌面螢幕往下讀。
+公開網頁，彙整每日（週一至週日）早晨與晚間的國際、社群、天象、股市四方情報，用手機直向或桌面螢幕往下讀。
 
 - 網站：https://peasema.github.io/
 - 原始碼：https://github.com/peasema/peasema.github.io（`main` 分支根目錄即 GitHub Pages 來源，沒有建置步驟）
